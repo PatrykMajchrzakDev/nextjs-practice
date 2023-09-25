@@ -1,4 +1,6 @@
+import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
+import "@/components/Navbar";
 
 export const metadata = {
   title: "Promptify",
@@ -12,7 +14,10 @@ const RootLayout = ({ children }) => {
           <div className="gradient"></div>
         </div>
 
-        <main className="app">{children}</main>
+        <main className="app">
+          <Navbar />
+          {children}
+        </main>
       </body>
     </html>
   );
