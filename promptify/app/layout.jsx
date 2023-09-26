@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import Provider from "@/components/Provider";
 import "@/styles/globals.css";
 import "@/components/Navbar";
 
@@ -10,14 +11,16 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body>
-        <div className="main">
-          <div className="gradient"></div>
-        </div>
+        <Provider>
+          <div className="main">
+            <div className="gradient"></div>
+          </div>
 
-        <main className="app">
-          <Navbar />
-          {children}
-        </main>
+          <main className="app">
+            <Navbar />
+            {children}
+          </main>
+        </Provider>
       </body>
     </html>
   );

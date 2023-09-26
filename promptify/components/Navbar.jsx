@@ -4,17 +4,16 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 const Navbar = () => {
-  const isUserLoggedIn = true;
+  const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   //this allows to sign in using google and signIn
   useEffect(() => {
-    const setProviders = async () => {
-      const response = await getProviders();
-      setProviders(response);
-    };
-    // setProviders();
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
   }, []);
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -31,7 +30,7 @@ const Navbar = () => {
 
       {/* mobile nav */}
       <div className="sm:flex hidden">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
@@ -52,25 +51,24 @@ const Navbar = () => {
         ) : (
           <>
             {providers &&
-              Object.values(
-                providers.map((provider) => (
-                  <button
-                    type="button"
-                    key={provider.name}
-                    onClick={() => signIn(provider.id)}
-                    className="black_btn"
-                  >
-                    Sign In
-                  </button>
-                ))
-              )}
+              Object.values(providers).map((provider) => (
+                <button
+                  type="button"
+                  key={provider.name}
+                  onClick={() => {
+                    signIn(provider.id);
+                  }}
+                  className="black_btn"
+                >
+                  Sign in
+                </button>
+              ))}
           </>
         )}
       </div>
-
       {/* Mobile navigation */}
       <div className="sm:hidden flex relative">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
             <Image
               src="/assets/images/logo.svg"
@@ -114,18 +112,18 @@ const Navbar = () => {
         ) : (
           <>
             {providers &&
-              Object.values(
-                providers.map((provider) => (
-                  <button
-                    type="button"
-                    key={provider.name}
-                    onClick={() => signIn(provider.id)}
-                    className="black_btn"
-                  >
-                    Sign In
-                  </button>
-                ))
-              )}
+              Object.values(providers).map((provider) => (
+                <button
+                  type="button"
+                  key={provider.name}
+                  onClick={() => {
+                    signIn(provider.id);
+                  }}
+                  className="black_btn"
+                >
+                  Sign in
+                </button>
+              ))}
           </>
         )}
       </div>
