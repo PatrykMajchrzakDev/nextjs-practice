@@ -17,8 +17,8 @@ const Feed = () => {
   const handleSearchChange = (e) => {};
 
   const fetchPosts = async () => {
-    const reponse = await fetch("/api/prompt");
-    const data = await reponse.json();
+    const response = await fetch("/api/prompt");
+    const data = await response.json();
     setPosts(data);
   };
 
