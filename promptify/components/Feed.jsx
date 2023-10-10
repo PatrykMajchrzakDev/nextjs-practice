@@ -12,9 +12,46 @@ const PromptCardList = ({ data, handleTagClick }) => {
   );
 };
 const Feed = () => {
-  const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState([]);
-  const handleSearchChange = (e) => {};
+  const [searchText, setSearchText] = useState("");
+  let debounceTimer;
+
+  const handleSearchChange = async (e) => {
+    const query = e.target.value;
+    setSearchText(query);
+  };
+
+  //Keyword searching with db fetching
+  useEffect(() => {
+    // Define a cleanup function to clear the debounce timer
+    const cleanup = () => {
+      clearTimeout(debounceTimer);
+    };
+    // Clear any previous debounce timer
+    clearTimeout(debounceTimer);
+    if (searchText != "") {
+      // Set a new debounce timer to wait 1 second
+      debounceTimer = setTimeout(async () => {
+        try {
+          const response = await fetch(
+            `/api/prompt?searchKeyword=${searchText}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setPosts(data);
+          } else {
+            console.error("Error fetching search results:", response.status);
+          }
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+        }
+      }, 1000);
+    } else {
+      fetchPosts();
+    }
+    // Return the cleanup function
+    return cleanup;
+  }, [searchText]);
 
   const fetchPosts = async () => {
     const response = await fetch("/api/prompt");
@@ -22,9 +59,9 @@ const Feed = () => {
     setPosts(data);
   };
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  // useEffect(() => {
+
+  // }, []);
   return (
     <section className="feed">
       <form className="relative w-full flex-center">
